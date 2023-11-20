@@ -2,6 +2,10 @@ provider "aws" {
   region = "ap-south-1"  # Change to your desired region
 }
 
+data "aws_s3_bucket_object" "lambda_zip" {
+  bucket = "s3-bucket-for-lambda-demo"
+  key    = "create-contribution-lambda-1.0.0-SNAPSHOT_20231120_195258.zip"
+}
 resource "aws_lambda_function" "lambda_function" {
   function_name    = var.function_name
   runtime          = var.runtime
@@ -12,7 +16,7 @@ resource "aws_lambda_function" "lambda_function" {
   publish          = true
   reserved_concurrent_executions = var.concurrency
 
-  source_code_hash = filebase64("https://s3-bucket-for-lambda-demo.s3.ap-south-1.amazonaws.com/create-contribution-lambda-1.0.0-SNAPSHOT_20231120_195258.zip")  # Change to your actual ZIP file path
+  source_code_hash = filebase64(data.aws_s3_bucket_object.lambda_zip.body)
   s3_bucket        = "s3-bucket-for-lambda-demo"
   s3_key           = "create-contribution-lambda-1.0.0-SNAPSHOT_20231120_195258.zip"  
   environment {
