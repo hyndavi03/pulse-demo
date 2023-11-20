@@ -12,7 +12,7 @@ resource "aws_lambda_function" "lambda_function" {
   publish          = true
   reserved_concurrent_executions = var.concurrency
 
-  source_code_hash = filebase64("${path.module}/my-lambda-function.zip")  # Change to your actual ZIP file path
+  source_code_hash = filebase64("https://s3-bucket-for-lambda-demo.s3.ap-south-1.amazonaws.com/create-contribution-lambda-1.0.0-SNAPSHOT_20231120_195258.zip")  # Change to your actual ZIP file path
   s3_bucket        = "s3-bucket-for-lambda-demo"
   s3_key           = "create-contribution-lambda-1.0.0-SNAPSHOT_20231120_195258.zip"  
   environment {
