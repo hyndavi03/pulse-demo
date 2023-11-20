@@ -33,3 +33,8 @@ jobs:
         aws-region: ap-south-1  # Adjust the AWS region
     - run: aws s3 cp $GITHUB_WORKSPACE/create-contribution-lambda-1.0.0-SNAPSHOT_*.zip s3://s3-bucket-for-lambda-demo/
 
+    - name: Initialize Terraform
+      run: terraform init
+
+    - name: Apply Terraform changes
+      run: terraform apply -auto-approve
