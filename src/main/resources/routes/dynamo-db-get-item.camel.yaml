@@ -1,0 +1,16 @@
+- route:
+    from:
+      uri: direct:queryItem
+      steps:
+        - setHeader:
+            name: queryInAccountNumber
+            simple: '${body.accountNumber}'
+        - process:
+            ref: buildDynamoDBQueryRequest
+        - to: 
+            uri: aws2-ddb://AccountContributionMaster
+            parameters:
+              amazonDDBClient: '#myDynamoDbClient'
+              enabledInitialDescribeTable: 'false'
+        - process:
+            ref: filterActiveContributionsDBEntries

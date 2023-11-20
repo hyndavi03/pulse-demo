@@ -12,7 +12,7 @@ resource "aws_lambda_function" "lambda_function" {
   publish          = true
   reserved_concurrent_executions = var.concurrency
 
-  source_code_hash = filebase64("${path.module}/your-lambda-function.zip")  # Change to your actual ZIP file path
+  source_code_hash = filebase64("${path.module}/my-lambda-function.zip")  # Change to your actual ZIP file path
 
   environment {
     variables = {

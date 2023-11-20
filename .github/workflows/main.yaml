@@ -1,0 +1,35 @@
+name: Build and Upload to S3
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up JDK
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'adopt'
+        java-version: '21'  # Adjust the Java version
+
+    - name: Build with Maven
+      run: mvn clean package -DskipTests
+
+    - name: Archive JAR
+      run: zip -j $GITHUB_WORKSPACE/create-contribution-lambda-1.0.0-SNAPSHOT_$(date +\%Y\%m\%d_\%H\%M\%S).zip $GITHUB_WORKSPACE/target/*.jar
+
+    - name: Upload to S3
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-south-1  # Adjust the AWS region
+    - run: aws s3 cp $GITHUB_WORKSPACE/create-contribution-lambda-1.0.0-SNAPSHOT_*.zip s3://s3-bucket-for-lambda-demo/
+

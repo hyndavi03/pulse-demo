@@ -1,0 +1,21 @@
+- route:
+    id: route-1894
+    from:
+      uri: direct:putItem
+      steps:
+      - setHeader:
+          constant: PutItem
+          name: CamelAwsDdbOperation
+      - setHeader:
+          constant: "true"
+          name: CamelAwsDdbConsistentRead
+      - setHeader:
+          constant: ALL_OLD
+          name: CamelAwsDdbReturnValues
+      - process:
+          ref: "dynamoDbPayloadConstructor"
+      - to:
+          uri: aws2-ddb://AccountContributionMaster
+          parameters:
+            amazonDDBClient: '#myDynamoDbClient'
+            enabledInitialDescribeTable: 'false'

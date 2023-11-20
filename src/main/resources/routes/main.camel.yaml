@@ -1,0 +1,64 @@
+- route:
+    from:
+      uri: direct:main
+      steps: 
+        - process:
+            ref: apiGwCamelInputLoader
+        #- setBody:
+        #    simple: '${in.body.body}'
+        - doTry:
+           doFinally:
+             steps:
+                - process:
+                    ref: apiGwResponseBuilder
+           doCatch:
+             - exception:
+                 - "org.apache.camel.ValidationException"
+               steps:
+                 - setHeader:
+                    name: outStatusCode
+                    constant: '400'
+                 - bean:
+                    method: 'failureResponse(${exception.message})'
+                    beanType: org.pulse.lambda.beans.ResponseBuilder
+             - exception:
+                 - "java.lang.Exception"
+               steps:
+                 - setHeader:
+                    name: outStatusCode
+                    constant: '500'
+                 - bean:
+                    method: 'failureResponse(${exception.message})'
+                    beanType: org.pulse.lambda.beans.ResponseBuilder
+           steps:
+            # validate payload
+            - to:
+                uri: json-validator:classpath:schemas/contribution-json-schema.json
+            - setHeader:
+                name: CamelJacksonUnmarshalType
+                constant: org.pulse.lambda.beans.CreateContributionRequest
+            - unmarshal:
+                json: 
+                    allowUnmarshallType: true
+            - to:
+                uri: direct:queryItem
+            - choice:
+                when:
+                  - simple: '${header.CamelAwsDdbItems.size()} > 0'
+                    steps:
+                        - setHeader:
+                            name: outStatusCode
+                            constant: '400'
+                        - bean:
+                            method: 'failureResponse("This account has existing contribution.")'
+                            beanType: org.pulse.lambda.beans.ResponseBuilder
+                otherwise:
+                  steps:
+                    - to:
+                        uri: direct:putItem
+                    - bean:
+                        method: successResponse
+                        beanType: org.pulse.lambda.beans.ResponseBuilder
+            
+
+           
