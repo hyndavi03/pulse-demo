@@ -23,7 +23,7 @@ resource "aws_iam_role_policy_attachment" "lambda_policy" {
   count = var.create_lambda_function ? 1 : 0
 
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-  role       = aws_iam_role.lambda_role[0].name
+  role       = aws_iam_role.lambda_role.name
 }
 
 resource "aws_lambda_function" "lambda_function" {
