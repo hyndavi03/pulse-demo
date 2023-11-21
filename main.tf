@@ -32,7 +32,7 @@ resource "aws_lambda_function" "lambda_function" {
   function_name    = var.function_name
   runtime          = var.runtime
   handler          = var.handler
-  role             = aws_iam_role.lambda_role[0].arn
+  role             = aws_iam_role.lambda_role.arn
   timeout          = 10
   memory_size      = 256
   publish          = true
