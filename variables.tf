@@ -8,11 +8,6 @@ variable "runtime" {
   type        = string
 }
 
-variable "s3_bucket" {
-  description = "Concurrency limit for the Lambda function"
-  type        = number
-}
-
 variable "handler" {
   description = "Handler for the Lambda function"
   type        = string
