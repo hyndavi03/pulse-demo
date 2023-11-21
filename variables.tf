@@ -32,3 +32,4 @@ variable "create_lambda_function" {
   description = "Whether to create the Lambda function"
   type        = bool
 }
+
