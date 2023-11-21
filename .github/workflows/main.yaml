@@ -16,7 +16,9 @@ jobs:
       with:
         distribution: 'adopt'
         java-version: '21'  # Adjust the Java version
- 
+      env:      
+       DATE: ${{ steps.set_date.outputs.date }}
+       
     - name: Build with Maven
       run: mvn clean package -DskipTests
       
