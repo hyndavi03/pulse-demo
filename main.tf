@@ -1,10 +1,14 @@
 provider "aws" {
   region = "ap-south-1"
+} 
+
+data "aws_iam_role" "existing_lambda_role" {
+  name = "lambda-exec-role"
 }
 
 resource "aws_iam_role" "lambda_role" {
-  name = "lambda-exec-role"
-
+  count = data.aws_iam_role.existing_lambda_role ? 0 : 1
+  name  = "lambda-exec-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -17,6 +21,7 @@ resource "aws_iam_role" "lambda_role" {
       },
     ],
   })
+  
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_policy" {
