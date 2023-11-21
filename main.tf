@@ -21,18 +21,17 @@ resource "aws_iam_role" "lambda_role" {
       },
     ],
   })
-  
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_policy" {
-  count = var.create_lambda_function ? 1 : 0
+  count = var.create_lambda_function && length(data.aws_iam_role.existing_lambda_role) == 0 ? 1 : 0
 
   role       = aws_iam_role.lambda_role[0].name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
 resource "aws_lambda_function" "lambda_function" {
-  count = var.create_lambda_function ? 1 : 0
+  count = var.create_lambda_function && length(data.aws_iam_role.existing_lambda_role) == 0 ? 1 : 0
 
   function_name    = var.function_name
   runtime          = var.runtime
@@ -60,9 +59,4 @@ resource "aws_lambda_function" "lambda_function" {
   lifecycle {
     create_before_destroy = true
   }
-
-
-
-  # Conditional expression to create or update the Lambda function
-  
 }
