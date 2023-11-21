@@ -26,8 +26,6 @@ resource "aws_lambda_function" "lambda_function" {
     mode = "Active"
   }
 
-  depends_on = [aws_iam_role_policy_attachment.lambda_policy]
-
   lifecycle {
     create_before_destroy = true
   }
