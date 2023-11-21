@@ -32,7 +32,8 @@ jobs:
         aws-region: ap-south-1  # Adjust the AWS region
     - run: |
         cd target
-        aws s3 cp function.zip s3://s3-bucket-for-lambda-demo/function.zip
+        aws s3 cp function.zip s3://s3-bucket-for-lambda-demo/create-contribution-lambda_$(date +'%Y-%m-%d').zip
+    
     - name: Initialize Terraform
       run: terraform init
  
