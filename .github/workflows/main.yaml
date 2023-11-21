@@ -1,7 +1,7 @@
 name: Build and Deploy To Lambda
  
 on:
-  workflow_dispatch
+  [workflow_dispatch, push]
  
 jobs:
   build:
