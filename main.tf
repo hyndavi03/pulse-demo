@@ -7,7 +7,7 @@ data "aws_iam_role" "existing_lambda_role" {
 }
 
 resource "aws_iam_role" "lambda_role" {
-  count = data.aws_iam_role.existing_lambda_role ? 0 : 1
+  count = length(data.aws_iam_role.existing_lambda_role) > 0 ? 0 : 1
   name  = "lambda-exec-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
