@@ -5,4 +5,3 @@ iam_role_arn     = "arn:aws:iam::316412582500:role/dynamodballaccess"  # Change 
 concurrency      = 2  # Change to your desired concurrency limit
 create_lambda_role = true
 create_lambda_function = true
-s3_key = "createcontributionlambda_${timestamp()}.zip"

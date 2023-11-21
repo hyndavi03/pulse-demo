@@ -17,15 +17,13 @@ jobs:
         distribution: 'adopt'
         java-version: '21'  # Adjust the Java version
       
-       
     - name: Build with Maven
       run: mvn clean package -DskipTests
-      
+    
     - name: Set Timestamp
       id: set-timestamp
       run: echo "::set-output name=timestamp::$(date +%s)"
     
-
     - name: Upload to S3
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -42,4 +40,4 @@ jobs:
       run: terraform init
  
     - name: Apply Terraform changes
-      run: terraform apply -auto-approve
+      run: terraform apply -auto-approve -var="s3_key=createcontributionlambda_$(date +%s).zip"
