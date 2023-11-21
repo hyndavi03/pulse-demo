@@ -13,7 +13,8 @@ resource "aws_lambda_function" "lambda_function" {
   reserved_concurrent_executions = var.concurrency
 
   s3_bucket        = "s3-bucket-for-lambda-demo"
-  s3_key           = "function.zip"  
+  s3_key           = "function.zip"
+
   environment {
     variables = {
       KEY1 = "VALUE1"
@@ -25,12 +26,14 @@ resource "aws_lambda_function" "lambda_function" {
     mode = "Active"
   }
 
-  depends_on = var.create_lambda_role ? [null_resource.dummy] : []
+  depends_on = [aws_iam_role_policy_attachment.lambda_policy]
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_iam_role" "lambda_role" {
-  count = var.create_lambda_role ? 1 : 0
-
   name = "lambda-exec-role"
 
   assume_role_policy = jsonencode({
@@ -48,12 +51,6 @@ resource "aws_iam_role" "lambda_role" {
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_policy" {
-  count = var.create_lambda_role ? 1 : 0
-
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-  role       = aws_iam_role.lambda_role[0].name
-}
-
-resource "null_resource" "dummy" {
-  count = var.create_lambda_role ? 1 : 0
+  role       = aws_iam_role.lambda_role.name
 }
