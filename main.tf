@@ -30,12 +30,19 @@ resource "aws_lambda_function" "lambda_function" {
 
   lifecycle {
     create_before_destroy = true
-    ignore_changes        = [s3_key]
   }
 }
 
+resource "aws_lambda_alias" "lambda_alias" {
+  count       = var.create_lambda_function ? 1 : 0
+  name        = "prod"
+  description = "Production environment"
+  function_name = aws_lambda_function.lambda_function[0].function_name
+  function_version = aws_lambda_function.lambda_function[0].version
+}
+
 resource "aws_iam_role" "lambda_role" {
-  count = var.create_lambda_role ? 1 : 0
+  count = var.create_lambda_function ? 1 : 0
 
   name = "lambda-exec-role"
 
@@ -54,8 +61,10 @@ resource "aws_iam_role" "lambda_role" {
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_policy" {
-  count = var.create_lambda_role ? 1 : 0
+  count = var.create_lambda_function ? 1 : 0
 
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-  role       = aws_iam_role.lambda_role[0].name  # Use [0] to reference the first (and only) role when creating
+  policy_arn  = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  role        = aws_iam_role.lambda_role[0].name
 }
+
+
