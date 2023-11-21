@@ -8,6 +8,11 @@ variable "runtime" {
   type        = string
 }
 
+variable "s3_bucket" {
+  description = "Concurrency limit for the Lambda function"
+  type        = number
+}
+
 variable "handler" {
   description = "Handler for the Lambda function"
   type        = string
@@ -23,14 +28,7 @@ variable "concurrency" {
   type        = number
 }
 
-variable "create_lambda_function" {
-  description = "Flag to create or update Lambda function"
-  type        = bool
-  default     = true
-}
-
 variable "create_lambda_role" {
-  description = "Flag to create or update IAM role for Lambda function"
+  description = "Whether to create the Lambda role"
   type        = bool
-  default     = true
 }
