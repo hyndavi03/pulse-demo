@@ -19,7 +19,10 @@ jobs:
  
     - name: Build with Maven
       run: mvn clean package -DskipTests
- 
+      
+    - name: Set Date      
+      id: set_date      
+      run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
     - name: Upload to S3
       uses: aws-actions/configure-aws-credentials@v1
