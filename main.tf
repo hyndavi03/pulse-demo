@@ -31,7 +31,10 @@ resource "aws_lambda_function" "lambda_function" {
   }
 }
 
+
 resource "aws_iam_role" "lambda_role" {
+  count = var.create_lambda_role ? 1 : 0
+
   name = "lambda-exec-role"
 
   assume_role_policy = jsonencode({
@@ -49,6 +52,8 @@ resource "aws_iam_role" "lambda_role" {
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_policy" {
+  count = var.create_lambda_role ? 1 : 0
+
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-  role       = aws_iam_role.lambda_role.name
+  role       = aws_iam_role.lambda_role[0].name  # Use [0] to reference the first (and only) role when creating
 }

@@ -4,3 +4,4 @@ handler          = "io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler::handl
 iam_role_arn     = "arn:aws:iam::316412582500:role/dynamodballaccess"  # Change to your IAM role ARN
 concurrency      = 2  # Change to your desired concurrency limit
 create_lambda_role = true
+create_lambda_function = true

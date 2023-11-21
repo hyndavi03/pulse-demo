@@ -27,3 +27,8 @@ variable "create_lambda_role" {
   description = "Whether to create the Lambda role"
   type        = bool
 }
+
+variable "create_lambda_function" {
+  description = "Whether to create the Lambda function"
+  type        = bool
+}
