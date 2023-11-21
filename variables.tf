@@ -33,3 +33,6 @@ variable "create_lambda_function" {
   type        = bool
 }
 
+variable "s3_key" {
+  description = "The object key for the Lambda function package in S3"
+}

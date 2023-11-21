@@ -1,7 +1,7 @@
 name: Build and Deploy To Lambda
  
 on:
-  [workflow_dispatch, push]
+  push
  
 jobs:
   build:
@@ -16,15 +16,15 @@ jobs:
       with:
         distribution: 'adopt'
         java-version: '21'  # Adjust the Java version
-      env:      
-       DATE: ${{ steps.set_date.outputs.date }}
+      
        
     - name: Build with Maven
       run: mvn clean package -DskipTests
       
-    - name: Set Date      
-      id: set_date      
-      run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+    - name: Set Timestamp
+      id: set-timestamp
+      run: echo "::set-output name=timestamp::$(date +%s)"
+    
 
     - name: Upload to S3
       uses: aws-actions/configure-aws-credentials@v1
@@ -34,7 +34,9 @@ jobs:
         aws-region: ap-south-1  # Adjust the AWS region
     - run: |
         cd target
-        aws s3 cp function.zip s3://s3-bucket-for-lambda-demo/function.zip
+        timestamp=$(echo ${{ steps.set-timestamp.outputs.timestamp }})
+        object_key="createcontributionlambda_${timestamp}.zip"
+        aws s3 cp function.zip "s3://s3-bucket-for-lambda-demo/${object_key}"
     
     - name: Initialize Terraform
       run: terraform init

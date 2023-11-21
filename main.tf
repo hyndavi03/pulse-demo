@@ -43,8 +43,7 @@ resource "aws_lambda_function" "lambda_function" {
   reserved_concurrent_executions = var.concurrency
 
   s3_bucket = "s3-bucket-for-lambda-demo"
-  s3_key    = "function.zip"
-
+  s3_key    = var.s3_key
   environment {
     variables = {
       KEY1 = "VALUE1"
