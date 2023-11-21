@@ -3,8 +3,6 @@ provider "aws" {
 }
 
 resource "aws_iam_role" "lambda_role" {
-  count = var.create_lambda_function ? 1 : 0
-
   name = "lambda-exec-role"
 
   assume_role_policy = jsonencode({
@@ -25,16 +23,14 @@ resource "aws_iam_role_policy_attachment" "lambda_policy" {
   count = var.create_lambda_function ? 1 : 0
 
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-  role       = aws_iam_role.lambda_role[0].name
+  role       = aws_iam_role.lambda_role.name
 }
 
 resource "aws_lambda_function" "lambda_function" {
-  count = var.create_lambda_function ? 1 : 0
-
   function_name    = var.function_name
   runtime          = var.runtime
   handler          = var.handler
-  role             = aws_iam_role.lambda_role[0].arn
+  role             = aws_iam_role.lambda_role.arn
   timeout          = 10
   memory_size      = 256
   publish          = true
@@ -57,4 +53,7 @@ resource "aws_lambda_function" "lambda_function" {
   lifecycle {
     create_before_destroy = true
   }
+
+  # Conditional expression to create or update the Lambda function
+  count = var.create_lambda_function ? 1 : 0
 }
