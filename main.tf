@@ -3,6 +3,8 @@ provider "aws" {
 }
 
 resource "aws_lambda_function" "lambda_function" {
+  count = var.create_lambda_function ? 1 : 0
+
   function_name    = var.function_name
   runtime          = var.runtime
   handler          = var.handler
@@ -28,9 +30,9 @@ resource "aws_lambda_function" "lambda_function" {
 
   lifecycle {
     create_before_destroy = true
+    ignore_changes        = [s3_key]
   }
 }
-
 
 resource "aws_iam_role" "lambda_role" {
   count = var.create_lambda_role ? 1 : 0
