@@ -15,7 +15,7 @@ resource "aws_lambda_function" "lambda_function" {
 
 
   s3_bucket        = "s3-bucket-for-lambda-demo"
-  s3_key           = "create-contribution-lambda-1.0.0-SNAPSHOT_20231120_195258.zip"  
+  s3_key           = "function.zip"  
   environment {
     variables = {
       KEY1 = "VALUE1"
